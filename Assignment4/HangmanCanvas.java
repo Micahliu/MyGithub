@@ -10,7 +10,7 @@ import acm.graphics.*;
 
 public class HangmanCanvas extends GCanvas {
 	 
-	/* Constants for the scaffold */
+	    // Constants 
 		private static final int SCAFFOLD_HEIGHT = 360;
 		private static final int BEAM_LENGTH = 144;
 		private static final int ROPE_LENGTH = 18;
@@ -40,94 +40,36 @@ public class HangmanCanvas extends GCanvas {
 	 
 	/** Resets the display so that only the scaffold appears */
 		public void reset() {
-			removeAll();
-			initScaffold();
+			initCanvas();
 			initMan();
 		}
 	 
-	/** Adds components to "full_scaffold" structure (GCompound) and places it on canvas. */
-		private void initScaffold(){
-			/* Sets the location for "full_scaffold". */
-			full_scaffold.setLocation(image_origin_x, image_origin_y);
+	/** Adds components to the structure (GCompound) and places it on canvas. */
+		private void initCanvas(){
 			
-			/*Adds the vertical scaffold to "full_scaffold". */
+			full_scaffold.setLocation(image_origin_x, image_origin_y);
+						
 			GLine scaffold = new GLine(0, 0, 0, SCAFFOLD_HEIGHT);
 			full_scaffold.add(scaffold);
-	 
-			/*Adds the horizontal beam to "full_scaffold". */
+	 			
 			GLine beam = new GLine(0, 0, BEAM_LENGTH, 0);
 			full_scaffold.add(beam);
-	 
-			/*Adds the vertical rope to "full_scaffold". */
+	 	
 			GLine rope = new GLine(BEAM_LENGTH, 0, BEAM_LENGTH, ROPE_LENGTH);
 			full_scaffold.add(rope);
 			
-			/*Adds "full_scaffold" to canvas. */
 			add(full_scaffold);
 		}
-		
-	/** Adds "man" (GCompound), currently empty, to the canvas. */
-		private void initMan(){
-			man.setLocation(image_origin_x+BEAM_LENGTH, image_origin_y+ROPE_LENGTH);
-			add(man);
-		}
-		
-	/** Adds current_word_label (GLabel) and wrong_guesses label to the canvas. */
-		public void initLabels(String current_word){
-			
-			/* Adds current_word_label */
-			current_word_label.setLocation(WIDTH/4 - current_word_label.getWidth()/2, HEIGHT-55);
-			current_word_label.setLabel(current_word);
-			current_word_label.setFont("Helvetica-36");
-			add(current_word_label);
-			
-			/* Adds wrong_guesses_label */
-			wrong_guesses_label.setLocation(WIDTH/4 - wrong_guesses_label.getWidth()/2, HEIGHT-30);
-			wrong_guesses_label.setFont("Helvetica-14");
-			wrong_guesses_label.setColor(Color.red);
-			add(wrong_guesses_label);
-			
-		}
-	 
-	/**
-	 * Updates the word on the screen to correspond to the current
-	 * state of the game.  The argument string shows what letters have
-	 * been guessed so far; unguessed letters are indicated by hyphens.
-	 */
-		
-		public void displayWord(String word) {
-			current_word_label.setLabel(word);
-		}
-		
-	 
-	/**
-	 * Updates the display to correspond to an incorrect guess by the
-	 * user.  Calling this method adds the letter to the list of incorrect
-	 * guesses that appears at the bottom of the window and causes the next 
-	 * body part to appear on the scaffold.
-	 */
-		
 		public void noteIncorrectGuess(char letter) {
 			addIncorrectGuess(letter);
-			buildMan();
+			dramMan();
 		}
-		
-	/** 
-	 * Appends the wrong_guess that is passed in to the end of wrong_guesses
-	 * 	and updates the wrong_guesses label accordingly.
-	 */
-		
 		private void addIncorrectGuess(char letter){
 			wrong_guesses = wrong_guesses += letter;
 			wrong_guesses_label.setLabel(wrong_guesses);
 		}
-	 
-	/** 
-	 * Updates the image of the man by adding the number of pieces appropriate to the number
-	 *  of wrong guesses.
-	 */
-		private void buildMan(){
-	 
+		private void dramMan(){
+			
 			switch (wrong_guesses.length()){
 				case 1: {
 					GOval head = new GOval(HEAD_RADIUS*2, HEAD_RADIUS*2);
@@ -177,18 +119,40 @@ public class HangmanCanvas extends GCanvas {
 				case 8: {
 					GLine r_foot = new GLine(HIP_WIDTH/2, HEAD_RADIUS*2+BODY_LENGTH+LEG_LENGTH, HIP_WIDTH/2+FOOT_LENGTH, HEAD_RADIUS*2+BODY_LENGTH+LEG_LENGTH );
 					man.add(r_foot);
-					face.removeAll();
-					GLine l_eye_1 = new GLine(15, 30, 25, 40);
-					face.add(l_eye_1);
-					GLine l_eye_2 = new GLine(15, 40, 25, 30);
-					face.add(l_eye_2);
-					GLine r_eye_1 = new GLine(2*HEAD_RADIUS-15, 30, 2*HEAD_RADIUS-25, 40);
-					face.add(r_eye_1);
-					GLine r_eye_2 = new GLine(2*HEAD_RADIUS-15, 40, 2*HEAD_RADIUS-25, 30);
-					face.add(r_eye_2);
+					
 				} break;
 			}
 		}
+	/** Adds "man" (GCompound), currently empty, to the canvas. */
+		private void initMan(){
+			man.setLocation(image_origin_x+BEAM_LENGTH, image_origin_y+ROPE_LENGTH);
+			add(man);
+		}
+		
+	/** Adds current_word_label (GLabel) and wrong_guesses label to the canvas. */
+		public void Labels(String current_word){
+			
+			/* Adds current_word_label */
+			current_word_label.setLocation(WIDTH/4 - current_word_label.getWidth()/2, HEIGHT-55);
+			current_word_label.setLabel(current_word);
+			current_word_label.setFont("Helvetica-36");
+			add(current_word_label);
+			
+			/* Adds wrong_guesses_label */
+			wrong_guesses_label.setLocation(WIDTH/4 - wrong_guesses_label.getWidth()/2, HEIGHT-30);
+			wrong_guesses_label.setFont("Helvetica-14");
+			wrong_guesses_label.setColor(Color.red);
+			add(wrong_guesses_label);
+			
+		}
+	 	
+		public void word(String word) {
+			current_word_label.setLabel(word);
+		}
+			
+
+
+		
 	 
 
 		

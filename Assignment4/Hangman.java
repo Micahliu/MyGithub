@@ -13,7 +13,7 @@ import java.awt.*;
 
 public class Hangman extends ConsoleProgram {
 
-	
+	 // Constants 
 	private RandomGenerator rgen = RandomGenerator.getInstance();
 	private HangmanLexicon lexicon = new HangmanLexicon();
 	private String secret_word = "";
@@ -23,36 +23,28 @@ public class Hangman extends ConsoleProgram {
 	private int guesses_left;
 	private int GUESS_CONSTANT = 8;
 	private HangmanCanvas canvas;
-	
+	// init canvas
 	public void init() {
 		canvas = new HangmanCanvas();
 		add(canvas);
 		canvas.reset();
 	}
+	// init console program
     public void run() {
     	startGame();
 	}
+    // start game from console program
     private void startGame() {
     	println("Welcome to Hangman!");
     	getSecretWord();
 		createBlankWord(secret_word);
-		canvas.initLabels(current_word);
+		canvas.Labels(current_word);
 		guesses_left = GUESS_CONSTANT;
     	while(play()){
     		playNext();
-    	}
-    	
+    	}	
     }
-    private void getSecretWord(){
-		int i = rgen.nextInt(0,lexicon.getWordCount()-1);
-		secret_word  = lexicon.getWord(i);
-	}
-	private void createBlankWord(String secret_word){
-		current_word = "";
-		for (int i=0; i<secret_word.length(); i++){
-			current_word += "-";
-		}
-	}
+    // losing or winning condition setting
 	private boolean play(){
 		//losing 
 		if (guesses_left == 0){
@@ -71,21 +63,22 @@ public class Hangman extends ConsoleProgram {
 			return true;
 		}
 	}
+	// Process handling
 	private void playNext(){
 		println("The word now looks like this: " + current_word);
 		println("You have " + guesses_left + " guesses left.");
-		Character guess = readLetterInput();
-		processGuess(guess);
+		Character guess = readInput();
+		compareWord(guess);
 	}
-	private Character readLetterInput(){
-		
+	// read input var
+	private Character readInput(){
 		
 		String str = readLine("Please guess a letter: ");
 		
 		// more than one ?
 		if (str.length() != 1){
 			println("Your must guess exactly one letter. Try again. ");
-			return readLetterInput();
+			return readInput();
 		}
 		
 		//converts string to character
@@ -94,14 +87,14 @@ public class Hangman extends ConsoleProgram {
 		// a character ?
 		if (Character.isLetter(ch) != true){
 			println("You can only guess letters. Try again.");		
-			return readLetterInput();
+			return readInput();
 		}		
 		ch = Character.toUpperCase(ch);
 		
 		// guessed previously ?
 		if (guessed_letters.indexOf(ch) >= 0){
 			println("You've already guessed the letters \"" + guessed_letters + "\". Try again. ");
-			return readLetterInput();
+			return readInput();
 		}
 		
 		//adds the guess to guessed letters.
@@ -110,7 +103,7 @@ public class Hangman extends ConsoleProgram {
 		//returns guess
 		return ch;
 	}
-	private void processGuess(Character guess){
+	private void compareWord(Character guess){
 		int n = secret_word.length();
 		boolean hit = false;
 		
@@ -137,6 +130,18 @@ public class Hangman extends ConsoleProgram {
 			wrong_guesses += guess;
 			canvas.noteIncorrectGuess(guess);
 		}
-		canvas.displayWord(current_word);
+		canvas.word(current_word);
+	}
+	// get random word from Lexicon array
+    private void getSecretWord(){
+		int i = rgen.nextInt(0,lexicon.getWordCount()-1);
+		secret_word  = lexicon.getWord(i);
+	}
+    // replace each character of word with "-"
+	private void createBlankWord(String secret_word){
+		current_word = "";
+		for (int i=0; i<secret_word.length(); i++){
+			current_word += "-";
+		}
 	}
 }
